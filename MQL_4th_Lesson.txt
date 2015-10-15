@@ -1,0 +1,27 @@
+Global variables of the terminal. Read this section in help.
+
+MQLde siniflarin kullanilmasi
+stringler her zaman call by reference olarak cagriliyor
+odev: Bir sinif daha olacak: Engine. Global butun fonksiyonlar bu sinifin uye fonksiyonu olacka. Mesela p[] pointer dizisi bu sinifin veri yapisi olacak. Mesela butun pozisyonlari 
+kapatabilir. Emir acilisi sirasinda gereken variablleari baska bir sinif alip bu sinif construct edebilir
+
+Dosya fonksiyonlarina bak: FileFunctions. FileOpen, FileClose, FileWrite vs...
+Mesela Engine sinifi log bilgilerini bir dosyaya loglayabilir
+
+Baska bir odev: Marubozu: Eger yukselense: open price = lowest price ve close price = highest price. Yani fitili olmayan mumlara marubozu deniyor. Eger dusense
+open = highest, close = lowest
+
+Odev su: Yukselen marubozu ise alis yap, dusen marubozu ise satis yap. Bir sinif sistemi kullan. Ayni paritede birden fazla emir acilabilmeli. Marubozu ne kadar uzunsa ihtimal daha
+cok artiyor. Marubozunun buyuklugune bakip bir alis veya satis karari alabilirsin.
+
+Ihmal edilebilecek fitilleri(golgeleri) dikkate almayip o mumu da marubozu olarak kabul edebilirsin.
+
+Reversal patterni: Trendin tersi yonunde yan yana iki tane marubozu varsa alis satis yapabilirsin. Meselea yukselen pattern ve son yukselen mum marubozu. Onun hemen yaninda dusen bir 
+marubozu varsa satis yap. Tersi durumda alis yap. ODEV BU. Ters yonde iki marubozu yan yana ise alis satis yap. Ikinci marubozu bitince alis veya satis yap. Mum boylarini aritmetik
+bir degerde tut. boylece cok kucuk marubozularda alis satis yapma. Ayni boyda olan marubozularda islem ac. TP, SL koyabilirsin.
+
+
+Volume: gelen tik sayisini veren dizi
+
+Ayni anda hem alis hem satis yparasan boyle pozsyonlara hatch pozisyonlari denir. MEsele piyasa cok durgunken birden hareketlenmeye basladiysa hem alis hem satis yaparsin. Bunlarin 
+stop loss pipleri dusuk, take profit pipleri yuksek olur genelde. Iste bunlara hatch position denir.
