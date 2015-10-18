@@ -230,23 +230,80 @@ bool Parity::isSell(void)
    return true;
 }
 
+class Engine{
+   Parity *m_p[5]; ///< parities
+   const static string msc_pairs[5] = {"EURUS", "USDJPY", "GBPUSD", "USDCHF", "AUDUSD"};
+   const static double msc_alots[5] = {1.0, 2.0, 1.5, 2.0, 0.5};
+   const static int msc_asl[5] = {10, 20, 15, 10, 30};
+   const static int msc_atp[5] = {5, 7, 10, 5, 15};
+   const static int msc_ano[5] = {345656, 345657, 345658, 345659, 345660};
+public:
+   /**
+   * Constructor
+   */
+   Engine(){
+      for(int k = 0; k < 5; ++k){
+         m_p[k] = new Parity(msc_pairs[k], msc_alots[k], msc_ano[k], msc_asl[k], msc_atp[k]);
+      }   
+   }
+   /**
+   * Destructor
+   */
+   ~Engine(){
+      for(int k = 0; k < 5; ++k){
+         delete p[k]; 
+      }   
+   }   
+   /**
+   * Display member function
+   */
+   void display(void)const;
+   /**
+   * Create new dynamic Parity class object array
+   */
+   /*
+   void openParities(void){
+      for(int k = 0; k < 5; ++k){
+         m_p[k] = new Parity(msc_pairs[k], msc_alots[k], msc_ano[k], msc_asl[k], msc_atp[k]);
+      }
+   }
+   */
+   /**
+   * Release resources
+   */
+   /*
+   void closeParities(void){
+      for(int k = 0; k < 5; ++k){
+         delete p[k]; 
+      }
+   }
+   */
+   /**
+   *  Trace positions
+   */
+   void trace(void){
+      for(int k=0; k<5; ++k){
+         m_p[k].tracePositions();
+      }
+   }   
+   
+   void checkNewPossibilities(void){
+      if(Parity::isNewBar()){
+         for(int k = 0; k<5; ++k){
+            m_p[k].checkBuy();
+            m_p[k].checkSell();
+         }
+      } 
+   }
+   
+}
 
-
-
-
-Parity *p[5];
+Engine myEngine;
 
 int OnInit()
 {
-   const string pairs[5] = {"EURUS", "USDJPY", "GBPUSD", "USDCHF", "AUDUSD"};
-   const double alots[5] = {1.0, 2.0, 1.5, 2.0, 0.5};
-   const int asl[5] = {10, 20, 15, 10, 30};
-   const int atp[5] = {5, 7, 10, 5, 15};
-   const int ano[5] = {345656, 345657, 345658, 345659, 345660};
    
-   for(int k = 0; k < 5; ++k){
-      p[k] = new Parity(pairs[k], alots[k], ano[k], asl[k], atp[k]);
-   }
+   //myEngine.openParities();
    
    return(INIT_SUCCEEDED);
 }
@@ -255,23 +312,20 @@ int OnInit()
 //+------------------------------------------------------------------+
 void OnDeinit(const int reason)
 {
-   for(int k = 0; k < 5; ++k){
-      delete p[k]; 
-   }
-   
+   //myEngine.closeParities();  
 }
 //+------------------------------------------------------------------+
 //| Expert tick function                                             |
 //+------------------------------------------------------------------+
 
-void display()
+void Engine::display()const
 {
    double actual = 0.;
    double history = 0.;
       
    for (int k = 0; k < 5; ++k){
-      actual += p[k].getActualProfit();
-      history += p[k].getHistoryProfit();      
+      actual += m_p[k].getActualProfit();
+      history += m_p[k].getHistoryProfit();      
    }//end for
    double total = actual + history;
    Comment(DoubleToStr(actual, 0), " ", DoubleToStr(history, 0), " ", DoubleToStr(total, 0));
@@ -279,19 +333,9 @@ void display()
 
 void OnTick()
 {
-   display();
-   
-   for(int k=0; k<5; ++k){
-      p[k].tracePositions();
-   }
-   
-   
-   if(Parity::isNewBar()){
-      for(int k = 0; k<5; ++k){
-         p[k].checkBuy();
-         p[k].checkSell();
-      }
-   }   
+   myEngine.display();
+   myEngine.trace();
+   myEngine.checkNewPossibilities();  
 }
 //+------------------------------------------------------------------+
 //magic numberla kapatan bir fonksiyon. statik fonksiyon
