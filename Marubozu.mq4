@@ -244,12 +244,8 @@ bool Parity::isBuy(void)
    if (isMarubozu(1) && isMarubozu(2)){
       Marubozu m1 = getMarubozu(1);
       Marubozu m2 = getMarubozu(2);
-      if ( !(m1.is_increased()) && (m2.is_increased()) )
+      if ( (m1.is_increased()) && !(m2.is_increased()) )
          if ( (m1.get_diff() >= msc_min_diff_to_open_position) && (m2.get_diff() >= msc_min_diff_to_open_position)){
-            if (ms_alert == true){
-               Alert(m_sym, " paritesinde alis kosulu olustu");
-               ms_alert = false;
-            }
             return true;
          }
    }
@@ -261,12 +257,8 @@ bool Parity::isSell(void)
    if (isMarubozu(1) && isMarubozu(2)){
       Marubozu m1(getMarubozu(1));
       Marubozu m2(getMarubozu(2));
-      if ( (m1.is_increased()) && !(m2.is_increased()) )
+      if ( !(m1.is_increased()) && (m2.is_increased()) )
          if ( (m1.get_diff() >= msc_min_diff_to_open_position) && (m2.get_diff() >= msc_min_diff_to_open_position)){
-            if (ms_alert == true){
-               Alert(m_sym, " paritesinde satis kosulu olustu");
-               ms_alert = false;
-            }
             return true;
          }
    }
@@ -352,7 +344,6 @@ public:
    
    void checkNewPossibilities(void){
       if(Parity::isNewBar()){
-         ms_alert = true;
          m_p.checkBuy();
          m_p.checkSell();         
       } 
@@ -380,7 +371,6 @@ void MarubozuEngine::display()const
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
 MarubozuEngine engine;
-static bool ms_alert = true;      ///< To alert once in OnTick event. used to test the code
 
 int OnInit()
   {
