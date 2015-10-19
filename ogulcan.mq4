@@ -218,11 +218,6 @@ bool Parity::isBuy(void)
 bool Parity::isSell(void)
 {
    // Period() grafigin kendi periyodu. PERIOD_M5 gibi enum da gecebilirsin
-   // Ama bu iClose hangi barin close priceini geri donuyor? Girdigimiz symbolun 
-   // son bari mi? sondan bir onceki mi? burada nasil loop ediyoruz? bu for loopta
-   // sondan 3 onceki bara mi bakiyor? Acik olan butun barlara mi bakiyor?
-   // nasil for loop yapiyor? Her seferinde son acilan muma mi bakiyor? oyleyse
-   // Period()*msc_bar kadar surede geri doner bu fonksiyon
    for(int k = 0; k < msc_bar; ++k){
       if(!(iClose(m_sym, Period(), k + 1) < iClose(m_sym, Period(), k + 2)))
          return false;
