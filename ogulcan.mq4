@@ -66,10 +66,10 @@ public:
    void checkSell();
 };
 
-const int Parity::msc_bar = 4;
+const int Parity::msc_bar = 3;      // number of bars changed to 3
 const int Parity::msc_open_trial = 3;
 const int Parity::msc_close_trial = 3;
-const int Parity::msc_slippage = 0;
+const int Parity::msc_slippage = 3; // slippage changed to 3
 
 void Parity::checkBuy(void)
 {
@@ -123,7 +123,7 @@ string Parity::getInfo(void)const
    return retval;
 }
 
-STAIC bool Parity::closePosition(int ticket)
+bool Parity::closePosition(int ticket)
 {
    if (OrderSelect(ticket, SELECT_BY_TICKET, MODE_TRADES)){
       Alert(ticket, "No'lu emir secilemedi. Hata kodu: ", GetLastError());
@@ -232,11 +232,11 @@ bool Parity::isSell(void)
 
 class Engine{
    Parity *m_p[5]; ///< parities
-   const static string msc_pairs[5] = {"EURUS", "USDJPY", "GBPUSD", "USDCHF", "AUDUSD"};
-   const static double msc_alots[5] = {1.0, 2.0, 1.5, 2.0, 0.5};
-   const static int msc_asl[5] = {10, 20, 15, 10, 30};
-   const static int msc_atp[5] = {5, 7, 10, 5, 15};
-   const static int msc_ano[5] = {345656, 345657, 345658, 345659, 345660};
+   const static string msc_pairs[5]; 
+   const static double msc_alots[5]; 
+   const static int msc_asl[5];
+   const static int msc_atp[5]; 
+   const static int msc_ano[5]; 
 public:
    /**
    * Constructor
@@ -245,13 +245,14 @@ public:
       for(int k = 0; k < 5; ++k){
          m_p[k] = new Parity(msc_pairs[k], msc_alots[k], msc_ano[k], msc_asl[k], msc_atp[k]);
       }   
+      Alert("Engine constructed!");
    }
    /**
    * Destructor
    */
    ~Engine(){
       for(int k = 0; k < 5; ++k){
-         delete p[k]; 
+         delete m_p[k]; 
       }   
    }   
    /**
@@ -294,8 +295,25 @@ public:
             m_p[k].checkSell();
          }
       } 
-   }
-   
+   }  
+};
+const string Engine::msc_pairs[5] = {"EURUSD", "USDJPY", "GBPUSD", "USDCHF", "AUDUSD"};
+const double Engine::msc_alots[5] = {1.0, 2.0, 1.5, 2.0, 0.5};
+const int Engine::msc_asl[5] = {10, 20, 15, 10, 30};
+const int Engine::msc_atp[5] = {5, 7, 10, 5, 15};
+const int Engine::msc_ano[5] = {345656, 345657, 345658, 345659, 345660};
+
+void Engine::display()const
+{
+   double actual = 0.;
+   double history = 0.;
+      
+   for (int k = 0; k < 5; ++k){
+      actual += m_p[k].getActualProfit();
+      history += m_p[k].getHistoryProfit();      
+   }//end for
+   double total = actual + history;
+   Comment(DoubleToStr(actual, 0), " ", DoubleToStr(history, 0), " ", DoubleToStr(total, 0));
 }
 
 Engine myEngine;
@@ -318,18 +336,7 @@ void OnDeinit(const int reason)
 //| Expert tick function                                             |
 //+------------------------------------------------------------------+
 
-void Engine::display()const
-{
-   double actual = 0.;
-   double history = 0.;
-      
-   for (int k = 0; k < 5; ++k){
-      actual += m_p[k].getActualProfit();
-      history += m_p[k].getHistoryProfit();      
-   }//end for
-   double total = actual + history;
-   Comment(DoubleToStr(actual, 0), " ", DoubleToStr(history, 0), " ", DoubleToStr(total, 0));
-}
+
 
 void OnTick()
 {
@@ -339,11 +346,11 @@ void OnTick()
 }
 //+------------------------------------------------------------------+
 //magic numberla kapatan bir fonksiyon. statik fonksiyon
-void Parity::close_pos(int magic)
-{
+//void Parity::close_pos(int magic)
+//{
    
-}
-
+//}
+/*
 void checkCloseAll()
 {
    double total = 0;
@@ -357,3 +364,4 @@ void checkCloseAll()
       ExpertRemove();   // motoru tamamen durdur
    }
 }
+*/
