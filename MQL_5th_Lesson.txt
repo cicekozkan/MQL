@@ -1,0 +1,47 @@
+Dow teorisi
+
+Baska birinin gelistirdigi indicatoru kendi kodunda gelistirirsen buna custom indicator deniyor.
+Indikatorler de expert advisor ve script gibi yazilan bir analiz. Alis veya satis yapmiyor. Yalnizca bir bilgi vermek icin kullaniliyor.
+Mesela altinin gumuse orani. Normalde olan bir parite degil ama sen onu indikator ile gosterebilirsin.
+
+Asilan adam mum grafigi.
+Cekic mum grafigi.
+Doji mum. Fiyatin arzla talebin dengeli oldugu yer. burda dikkatli olmak lazim. Aksam yildizi ve sabah yildizi diye iki farkli yaklasim var.
+Kirilan direncler artik destek, kirilan destekler artik direnc oluyor.
+
+Ancyclopedy of algorithmic trading
+
+Musteri -> Forex -> Likidite -> Bankalar (yaklasik 16 buyuk banka)
+
+Harmonic trading
+ZUP: harmonic trading icin kullanilan bir indicator
+Harmonic trading icerisinde fibonacciyi barindiriyor.
+
+Elliot teorisi
+
+Tuncer Sengoz - Elliot Dalga Prensibi
+
+Genel olarak izlemen gereken model su olmali (hocanin tavsiyesi): Bir kac islemle para kazanmak odakli degil de bir cok islemle (mesela 1000 islemle) para kazanmak
+olmali. 1000 islemden %60 kar %40 zarar etsen %20 kar etmis olursun.
+
+Account information fonksiyonlarina baktik. 
+
+ODEV: Her gelen tikte; tikin geldigi tarih, zaman, bid, ask. orani eger 5 digitse 5 digit olarak yaz. mesela 1.2524 u boyle degil de 1.25240 olarak yaz.
+secenek koy. text: true, binary: true. her ikisi de dogruysa hem text hem binary yazsin. biri false ise onu yazmayacak.
+Veri sayisi bir sayiyiyi gecince dosyayi kapat.
+herhangi bir paritede calisacak
+bir dosya acacak
+dosya ismi: parity_date_time.txt veya *.dat
+Datetime burda 8 byte. onu inte cevirip 4 byte olarak yaz.
+Datetime_bid_ask = 4_8_8 = 20 byte. Her bir satir 20 byte
+account company de yaz
+
+GlobalVariableSet: 
+GlobalVariableDel: Global iki farkli anlamda kullaniliyor. Biri bildigimiz C deki global degisken
+
+
+Marubozu odevinde mum karsilastirmalarini yaparken open ve close vs fiyatlari Digits ile normalize et. NormalizeDouble fonksiyonunu kullan
+int high = (int)NormalizeDouble(High[index], Digits) / Point;
+int low = (int)NormalizeDouble(Low[index], Digits) / Point;
+
+Yazdigin EA icin Back test yapma sansin var. 
