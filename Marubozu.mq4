@@ -10,10 +10,10 @@
 #property strict
 
 class Marubozu{
-   double m_diff;
+   int m_diff;
    bool m_increased;
 public:
-   Marubozu(double diff, bool increased): m_diff(diff), m_increased(increased){}
+   Marubozu(int diff, bool increased): m_diff(diff), m_increased(increased){}
    Marubozu(const Marubozu &r) {
       m_diff = r.get_diff();
       m_increased = r.is_increased();
@@ -25,7 +25,7 @@ public:
    }
    */
    
-   double get_diff()const{
+   int get_diff()const{
       return m_diff;
    }
    bool is_increased()const{
@@ -56,7 +56,7 @@ class Parity{
    int msl, mtp;
    bool m_b_flag, m_s_flag;   ///< buy flag, sell flag
    const static int msc_pips_ignore_wick; ///< the amount of pips to ignore when deciding whether marubozu or not
-   const static double msc_min_diff_to_open_position;
+   const static int msc_min_diff_to_open_position;
 public:
    /*!
    \fn bool isNewBar()
@@ -96,14 +96,14 @@ public:
    void checkBuy();
    void checkSell();
    bool isMarubozu(int i_candle);
-   static Marubozu* getMarubozu(int i_candle);
+   Marubozu* getMarubozu(int i_candle);
 };
 
 const int Parity::msc_open_trial = 3;
 const int Parity::msc_close_trial = 3;
 const int Parity::msc_slippage = 3; // slippage changed to 3
-const int Parity::msc_pips_ignore_wick = 0;
-const double Parity::msc_min_diff_to_open_position = 0.0;
+const int Parity::msc_pips_ignore_wick = 1;
+const int Parity::msc_min_diff_to_open_position = 5;
 
 void Parity::checkBuy(void)
 {
@@ -159,7 +159,7 @@ string Parity::getInfo(void)const
 
 bool Parity::closePosition(int ticket)
 {
-   if (OrderSelect(ticket, SELECT_BY_TICKET, MODE_TRADES)){
+   if (!OrderSelect(ticket, SELECT_BY_TICKET, MODE_TRADES)){
       Alert(ticket, "No'lu emir secilemedi. Hata kodu: ", GetLastError());
       return false;
    }
@@ -197,7 +197,7 @@ int Parity::openPosition(int optype)
          break;
       RefreshRates();
    }//end for
-   Alert(m_sym, " paritesinde ", ((optype == OP_BUY) ? "alýþ" : "satýþ"), " pozisyonu açýlamiyor.... Hata kodu : ", GetLastError());
+   if (ticket == -1) Alert(m_sym, " paritesinde ", ((optype == OP_BUY) ? "alýþ" : "satýþ"), " pozisyonu açýlamiyor.... Hata kodu : ", GetLastError());
    return ticket;
 }
 
@@ -303,15 +303,16 @@ Marubozu* Parity::getMarubozu(int i_candle)
    double close = Close[i_candle];
    double high = High[i_candle];
    double low = Low[i_candle];
+   double point = MarketInfo(m_sym, MODE_POINT)*10.;  
    
    if (open < close){
       // price increased
-      return new Marubozu(high-low, true);
+      return new Marubozu((int)(high-low)/point, true);
    }else if (open > close){
       // price decreased
-      return new Marubozu(high-low, false);
+      return new Marubozu((int)(high-low)/point, false);
    }
-   return new Marubozu(high-low, false); // dummy return
+   return new Marubozu((int)(high-low)/point, false); // dummy return
 }
 
 class MarubozuEngine{
@@ -351,8 +352,8 @@ public:
 };
 
 const double MarubozuEngine::msc_lot = 1.0; 
-const int MarubozuEngine::msc_sl = 20;
-const int MarubozuEngine::msc_tp = 30; 
+const int MarubozuEngine::msc_sl = 7;
+const int MarubozuEngine::msc_tp = 15; 
 const int MarubozuEngine::msc_no = 356979;
 
 void MarubozuEngine::display()const
