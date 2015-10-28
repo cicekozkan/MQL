@@ -33,8 +33,9 @@ void OpenFiles(char flags)
    }
    
    if(flags & FILE_TXT){   
-      string tfilename = OrderSymbol() + "_" + (string)str.year + (string)str.mon + (string)str.day + "_" + 
-                     (string)str.hour + (string)str.min + (string)str.sec + ".txt";
+      string tfilename = OrderSymbol() + "_" + IntegerToString(str.year) + IntegerToString(str.mon,2, '0')
+                         + IntegerToString(str.day,2, '0') + "_" + IntegerToString(str.hour,2, '0') + 
+                         IntegerToString(str.min,2, '0') + IntegerToString(str.sec,2, '0') + ".txt";
       tfh = FileOpen(tfilename, FILE_WRITE | FILE_TXT); 
       if (tfh == INVALID_HANDLE){
          Alert(tfilename, " cannot be opened. The error code = ", GetLastError());
@@ -45,8 +46,9 @@ void OpenFiles(char flags)
    }
    
    if(flags & FILE_BIN){   
-      string bfilename = OrderSymbol() + "_" + (string)str.year + (string)str.mon + (string)str.day + "_" + 
-                     (string)str.hour + (string)str.min + (string)str.sec + ".dat";
+      string bfilename = OrderSymbol() + "_" + IntegerToString(str.year) + IntegerToString(str.mon,2, '0')
+                         + IntegerToString(str.day,2, '0') + "_" + IntegerToString(str.hour,2, '0') + 
+                         IntegerToString(str.min,2, '0') + IntegerToString(str.sec,2, '0') + ".dat";
       bfh = FileOpen(bfilename, FILE_WRITE | FILE_BIN); 
       if (bfh == INVALID_HANDLE){
          Alert(bfilename, " cannot be opened. The error code = ", GetLastError());
@@ -61,7 +63,7 @@ void OpenFiles(char flags)
 int OnInit()
 {   
    if(!(binary || text)){
-      Alert("Binary veya text dosya modundan biri secilmedi. Baslamak icin dosya modu secin");  // gelecekte bunu extern olarak alirsak 
+      Alert("Binary veya text dosya modundan biri secilmedi. Baslamak icin dosya modu secin");  // gelecekte bunu extern olarak alirsak lazim olacak
       ExpertRemove();
    }
    char flags = 0;
@@ -84,13 +86,12 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void OnTick()
 {
-   int date = (int)TimeCurrent();  
-   //FileWrite(fh, str.year, "/", str.mon, "/", str.day, " ", str.hour, ":", str.min, ":", str.sec," Tick ", ++tick);
-   double bid = NormalizeDouble(MarketInfo(OrderSymbol(), MODE_BID), 5);
-   double ask = NormalizeDouble(MarketInfo(OrderSymbol(), MODE_ASK), 5);
-   if (text) if (FileWrite(tfh, (int)date, bid, ask))   tline++; // dosyaya yazamama durumunda simdilik hata verme
-   if (binary) if (FileWrite(bfh, (int)date, bid, ask)) bline++; 
-   if (++tline >= MAX_LINES)  OpenFiles(FILE_TXT);
-   if (++bline >= MAX_LINES)  OpenFiles(FILE_BIN);
+   int date = (int)(TimeCurrent());  
+   double bid = MarketInfo(OrderSymbol(), MODE_BID);
+   double ask = MarketInfo(OrderSymbol(), MODE_ASK);
+   if (text) if (FileWrite(tfh, date, DoubleToStr(bid, Digits), DoubleToStr(ask, Digits)))   tline++; // dosyaya yazamama durumunda simdilik hata verme
+   if (binary) if (FileWrite(bfh, date, DoubleToStr(bid, Digits), DoubleToStr(ask, Digits))) bline++; 
+   if (tline >= MAX_LINES)  {OpenFiles(FILE_TXT); tline = 0;}
+   if (bline >= MAX_LINES)  {OpenFiles(FILE_BIN); bline = 0;}
 }
 //+------------------------------------------------------------------+
