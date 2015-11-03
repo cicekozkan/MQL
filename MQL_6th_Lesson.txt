@@ -1,0 +1,44 @@
+ODEV: Fikri kimseye soyleme
+Expert Advisor: Pozisyon acan bi EA degil. Pozisyon acan EA ile entegre calisacak. Amaci pozisyon kapatmak. Istedigimiz kosullara gelindiginde pozisyonu kapatacak.
+External degiskenin olsun. integer. Bu exmagicnumber a ait pozisyonlari kapatacak yalnizca. Acilmis olan emirlerin commentine bakacaksin. Commentin ilk karakteri bir tamsayi.
+Bu tamsayi 1,2,3 olabilir. Mesela magic number 1975 ise onun yormu 1_1975, 2_1975, 3_1975 olabilir. Burada onemli olan comment stringinin ilk karakteri. Bu karakter 
+take profit. 3 tane double external take profitin var. bunlara by default degerler ver. mesela takeprofit_1 = 12, takeprofit_2 = 30, takeprofit_3 = 45. commentin ilk karakterine 
+gore take profitin bu olacak. Baslangicta hiv bir emir yok. Emir sayilari n e kadar gidebilir. Tek bir emir varsa o emiri o take profit seviyesine gelince kapiyoruz. 2 ve daha 
+buyuk sayilar icin: Eger 2 emir varsa ortak para birimi olmayanlari 
+Pack veri yapisi olustur. bu veri yapisi icinde tutulan emirlerin hic bir ortak para birimi yok
+EUR
+USD
+GBP
+JPY
+CHF
+CAD
+AUD
+NZD
+yalnizca bu para birimlerini dikkate al
+bu 8 para biriminin 28 cifti var.
+ortak para birimi icermeyen ciftlerin sayisi en fazla 4 olabilir
+Eger elimde 4 lu olarak olusmus bir paket varsa bunu paket olarak kapat. Yani paketin toplam karina bakiyoruz. Yani hepsinin tek tek karlarinin toplamini yakaliyorsan
+hepsini kapat.
+Paket 3lu ise 3une birden bakacaksin
+2 li ise 2li
+tek varsa bir emire bakican
+
+Pack veri yapisinda ticket number tutulsun
+
+Paketlerin nasil olusturulur?
+Olusan paketlerdeki emirleri maksimize edecek sekilde. Mesela 5 farkli emir var. iki paket olusturacaksin. birinde 4 birinde 1 emir olacak.
+
+Yeni bir emir acildginda veya kapandignda paketleri tekrar olusturacaksin.
+PackReorginize() function cagir.
+Her zaman PackReorginize() isleminde her zaman paketlerde maksimum sayida emir olacak sekilde algoritma kur. 
+
+// OLASI BUTUN CIFT KOMBINASYONLARI
+const vector<string> svec{
+	"EURUSD", "GBPUSD", "USDJPY", "USDCHF", "USDCAD", "AUDUSD", "NZDUSD",
+	"EURGBP", "EURJPY", "EURCHF", "EURCAD", "EURAUD", "EURNZD",
+	"GBPJPY", "GBPCHF", "GBPCAD", "GBPAUD", "GBPNZD",
+	"CHFJPY", "CADJPY", "AUDJPY", "NZDJPY",
+	"CADCHF", "AUDCHF", "NZDCHF",
+	"AUDCAD", "NZDCAD",
+	"AUDNZD"
+};
